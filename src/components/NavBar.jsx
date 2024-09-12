@@ -6,7 +6,6 @@ import logo from "../assets/Kitsune.jpg";
 const NavBar = () => {
     const location = useLocation();
     const currentPage = location.pathname;
-    console.log(currentPage)
     const { inputText ,setInputText } = useContext(DataContext);
 
     const homeMatch = useMatch('/home');

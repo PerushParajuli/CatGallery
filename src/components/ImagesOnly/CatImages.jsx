@@ -1,4 +1,4 @@
-import CatCard from "./CatCard";
+import CatImage from '../FavoriteComponents/catImage'
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
@@ -49,7 +49,7 @@ const CatImages = () => {
                     >
                         <Masonry gutter="1rem">
                             {cats.map((cat, index) => {
-                                return <CatCard catInfo={cat} key={index} />;
+                                return <CatImage catInfo={cat} key={index} />;
                             })}
                         </Masonry>
                     </ResponsiveMasonry>

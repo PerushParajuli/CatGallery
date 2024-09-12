@@ -2,18 +2,35 @@ import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { DataContext } from "../../Context";
 
-const CatCard = ({ catInfo }) => {
-    const { favorite, setFavorite } = useContext(DataContext);
-    const [isActive, setIsActive] = useState(false);
+const catImage = ({ catInfo }) => {
+    const { favorite, setFavorite } = useContext(DataContext); // Global favorites state
+    const [isActive, setIsActive] = useState(false); // Local state to toggle the heart icon
+
     let breed = catInfo.breeds[0];
-    let name;
-    breed ? (name = breed.name) : (name = "Unknown");
+    let name = breed ? breed.name : null;
     const { id: catId, url: imageUrl } = catInfo;
 
+    // Effect to sync local state with global state
+    useState(() => {
+        // checking if the current cat is in the favorites
+        const isFavorite = favorite.some((item) => item.id === catId);
+        setIsActive(isFavorite); // Set the active state based on global favorites
+    }, [favorite, catId]);
+
     const handleFavorite = (catInfo) => {
-        catInfo['from'] = 'home';
-        setIsActive(!isActive);
-        setFavorite([...favorite, catInfo]);
+        const updatedCatInfo = {
+            ...catInfo,
+            favoriteState: !isActive, // Toggle the favorite state (true or false)
+            from: "home", // Add the "from" field
+        };
+
+        if (isActive) {
+            // If it's already a favorite, remove it
+            setFavorite(favorite.filter((item) => item.id !== catId));
+        } else {
+            // If it's not a favorite, add it
+            setFavorite([...favorite, updatedCatInfo]);
+        }
     };
 
     return imageUrl ? (
@@ -33,11 +50,11 @@ const CatCard = ({ catInfo }) => {
                 <i
                     className={`fa-solid fa-heart absolute top-2 right-2 transition text-2xl  duration-300 ease-in-out cursor-pointer
                         ${isActive ? "text-red-700 scale-125" : "text-rose-300"}
-                    }`}
+                    `}
                 ></i>
             </button>
         </div>
     ) : null;
 };
 
-export default CatCard;
+export default catImage;
